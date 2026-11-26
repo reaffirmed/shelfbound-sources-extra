@@ -1,0 +1,12 @@
+{
+  "name": "shelfbound-sources-extra",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "build": "node tools/shelf-repo/bin/shelf-repo.mjs build",
+    "run-source": "node tools/shelf-repo/bin/shelf-repo.mjs run"
+  },
+  "devDependencies": { "cheerio": "^1.0.0" }
+}

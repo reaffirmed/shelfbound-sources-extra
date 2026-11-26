@@ -1,0 +1,59 @@
+name: Publish repo
+
+# Tests every source, then builds and signs the repo and publishes dist/ to GitHub Pages.
+# Needs a repository secret named SHELF_SIGNING_KEY holding the contents of signing.key,
+# and Settings > Pages > Source set to "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Build and sign
+        if: github.event_name != 'pull_request'
+        env:
+          SHELF_SIGNING_KEY: ${{ secrets.SHELF_SIGNING_KEY }}
+        run: |
+          if [ -z "$SHELF_SIGNING_KEY" ]; then
+            echo "::error::Add the SHELF_SIGNING_KEY secret (the contents of signing.key) under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          npm run build
+          cp site/index.html dist/index.html
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
+        with:
+          path: dist
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
