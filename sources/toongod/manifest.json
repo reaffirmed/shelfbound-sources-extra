@@ -1,0 +1,11 @@
+{
+  "id": "io.github.reaffirmed.toongod",
+  "name": "ToonGod",
+  "version": "1.0.0",
+  "kind": "images",
+  "format": "manhwa",
+  "languages": ["en"],
+  "contentRating": "mature",
+  "domains": ["toongod.org", "*.toongod.org"],
+  "capabilities": ["filters", "listings"]
+}
