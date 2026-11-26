@@ -9,6 +9,7 @@ https://reaffirmed.github.io/shelfbound-sources-extra/
 | Source | Kind | Rating | Notes |
 | --- | --- | --- | --- |
 | Toonily | Manhwa | Mature | Webtoon reader. Search by genre, status, writer, artist and sort. Most of Toonily's catalog is adult: it only shows in search and Discover when Settings → Show sources rated up to is Explicit |
+| ToonGod | Manhwa | Mature | Webtoon reader. Search by genre (the site's own list), status, writer, artist, year and sort. Adult series only show in search and Discover when Settings → Show sources rated up to is Explicit |
 
 ## How publishing works
 
@@ -45,3 +46,15 @@ WordPress with a customised Madara theme. Search is `/search/?s=…&genre[]=…&
 pages hold the images in `.reading-content`. Covers and pages come from `*.tnlycdn.com`.
 Adult series are hidden from search and lists unless the request carries the cookie
 `toonily-mature=1`, which the source only sends when the person allows explicit sources.
+
+## ToonGod notes
+
+WordPress with the stock Madara theme. Search is `/?s=…&post_type=wp-manga&genre[]=…&status[]=…&m_orderby=…`
+(`/page/N/?…` after page 1), series live under `/webtoons/<slug>/` (the source also tries `/webtoon/`
+and `/manga/`), and the chapter list comes from a POST to `<series>/ajax/chapters/`, falling back to
+`/wp-admin/admin-ajax.php`. The genre filter reads the site's search form, with a built-in list as backup.
+Adult series are left out with Madara's `adult=0` search parameter, dropped when a card carries an
+adult badge, and adult genres are hidden, unless the person allows explicit sources.
+
+The test fixtures are written in stock Madara markup, not saved from the site: toongod.org blocks
+the cloud machine they were written on. Save real pages into `test/fixtures/toongod/` when you can.
